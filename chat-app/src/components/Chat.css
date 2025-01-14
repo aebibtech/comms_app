@@ -1,0 +1,132 @@
+/* Chat.css */
+
+/* Root Styling */
+:root {
+    --primary-color: #0084ff;
+    --background-color: #f0f2f5;
+    --message-bg-self: #d9fdd3;
+    --message-bg-other: #ddd;
+    --text-color: #000;
+    --border-radius: 20px;
+    --max-width: 600px;
+  }
+  
+  /* General Chat Container */
+  .chat-container {
+    display: flex;
+    flex-direction: column;
+    height: 95vh;
+  }
+  
+  .chat-header {
+    background-color: #007bff;
+    color: white;
+    padding: 1rem;
+    text-align: center;
+    font-size: 1.2rem;
+  }
+  
+  .chat-messages {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem;
+    background-color: #f0f0f0;
+  }
+  
+  .chat-message {
+    margin-bottom: 1rem;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    max-width: 60%;
+  }
+  
+  .chat-message.self {
+    align-self: flex-end;
+    background-color: var(--primary-color);
+    color: #fff;
+  }
+
+  .chat-message.self a {
+    color: #fff !important;
+  }
+  
+  .chat-message.other {
+    align-self: flex-start;
+    background-color: #ddd;
+  }
+  
+  .chat-input {
+    display: flex;
+    box-sizing: border-box;
+    width: 100% !important;
+    gap: 0.5rem;
+    padding: 1rem;
+    background-color: #f8f8f8;
+  }
+  
+  .chat-input input[type="text"] {
+    max-width: 75%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .chat-input input[type="file"] {
+    max-width: 15%;
+  }
+  
+  .chat-input button {
+    max-width: 10%;
+    padding: 0.5rem 1rem;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+  }
+  
+  .chat-input button:hover {
+    background-color: #0056b3;
+  }
+  
+  .chat-image {
+    max-width: 100%;
+    height: 15rem;
+    border-radius: 8px;
+    margin-top: 5px;
+  }
+  
+  .chat-file {
+    color: #007bff;
+    text-decoration: none;
+    font-size: 0.9rem;
+    margin-top: 5px;
+  }
+  
+  .chat-file:hover {
+    text-decoration: underline;
+  }
+  
+  
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .chat-container {
+      height: 100%;
+      max-width: 100%;
+    }
+  
+    .chat-message {
+      max-width: 90%;
+    }
+  
+    .chat-input input {
+      font-size: 0.9rem;
+    }
+  
+    .chat-input button {
+      font-size: 0.9rem;
+    }
+  }
+  

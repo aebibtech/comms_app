@@ -1,0 +1,43 @@
+services:
+  mongodb:
+    image: mongo:5
+    container_name: mongodb
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+  backend:
+    build:
+      context: ./backend
+    container_name: chat-backend
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - ./backend:/app
+    restart: always
+    depends_on:
+      - mongodb
+
+  frontend:
+    build:
+      context: ./chat-app  # Directory of the Vite React project
+    container_name: chat-frontend
+    ports:
+      - "80:80"
+
+  ngrok:
+    image: ngrok/ngrok:latest
+    command:
+      - "http"
+      - "http://host.docker.internal:80"
+      - "--url=comms.aebibtech.com"
+    environment:
+      - PLACEHOLDER=none
+    ports:
+      - 4040:4040
+
+volumes:
+  mongodb_data:

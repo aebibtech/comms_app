@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      background-color: #f4f4f4;
+    }
+    .navbar {
+      background-color: #007bff;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .navbar .brand {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: white;
+    }
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      margin-left: 15px;
+    }
+    .navbar a:hover {
+      background-color: #0056b3;
+      padding: 5px 10px;
+      border-radius: 5px;
+    }
+    .messages {
+      overflow-y: auto;
+      height: 300px;
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .container {
+      text-align: center;
+      margin-top: 20px;
+    }
+    input[type="text"] {
+      width: 80%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 4px;
+    }
+    button {
+      padding: 10px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+
+		@media (max-width: 600px) {
+      .navbar {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .navbar a {
+        margin: 5px 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar with Branding -->
+  <div class="navbar">
+    <div class="brand">ChatApp</div>
+    <div>
+      <a href="/">Home</a>
+      <a href="/register.html">Register</a>
+      <a href="/login.html">Login</a>
+      <a href="/chat.html">Chat</a>
+    </div>
+  </div>
+
+  <!-- Chat Content -->
+  <div class="container">
+    <div id="messages"></div>
+    <div id="inputContainer">
+      <input type="text" id="messageInput" placeholder="Type your message..." />
+      <button id="sendButton">Send</button>
+    </div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    // Ensure the user is logged in
+    const token = localStorage.getItem("authToken");
+    if (!token) {
+      alert("You are not logged in. Redirecting to login...");
+      window.location.href = "/login.html";
+    }
+
+    // Connect to Socket.IO with token
+    const socket = io({
+      auth: {
+        token: `Bearer ${token}`
+      }
+    });
+
+    // Elements
+    const messagesDiv = document.getElementById("messages");
+    const messageInput = document.getElementById("messageInput");
+    const sendButton = document.getElementById("sendButton");
+
+    // Handle incoming messages
+    socket.on("message", (data) => {
+      const messageElement = document.createElement("div");
+      messageElement.classList.add(data.username === "System" ? "system" : "user");
+      messageElement.textContent = `[${new Date(data.createdAt).toLocaleTimeString()}] ${data.username}: ${data.message}`;
+      messagesDiv.appendChild(messageElement);
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    });
+
+    // Handle errors
+    socket.on("connect_error", (err) => {
+      alert("Connection failed: " + err.message);
+      window.location.href = "/login.html";
+    });
+
+    // Send a message
+    sendButton.addEventListener("click", () => {
+      const message = messageInput.value.trim();
+      if (message) {
+        socket.emit("message", { message });
+        messageInput.value = "";
+      }
+    });
+
+    // Load previous messages (optional, requires backend support)
+    socket.on("previousMessages", (messages) => {
+      messages.forEach((data) => {
+        const messageElement = document.createElement("div");
+        messageElement.textContent = `${data.username}: ${data.message}`;
+        messagesDiv.appendChild(messageElement);
+      });
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    });
+  </script>
+
+</body>
+</html>
