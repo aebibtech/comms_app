@@ -33,7 +33,7 @@ services:
     command:
       - "http"
       - "http://host.docker.internal:80"
-      - "--url=comms.aebibtech.com"
+      - "--url=ngrokurl"
     environment:
       - PLACEHOLDER=none
     ports:
